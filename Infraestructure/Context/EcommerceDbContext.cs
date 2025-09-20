@@ -22,6 +22,7 @@ namespace Infraestructure.Context
         public DbSet<User> Users { get; set; }
         public DbSet<ValueCategory> ValueCategories { get; set; }
         public DbSet<ProductCategory> ProductCategories { get; set; }
+        public DbSet<OrderHistory> OrderHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -76,13 +77,31 @@ namespace Infraestructure.Context
                 .WithMany(c => c.Products)
                 .HasForeignKey(pc => pc.CategoryId);
 
-            //One-to-many relationship: User → Order
 
-            modelBuilder.Entity<Order>()
-                .HasOne(o => o.User)
-                .WithMany(u => u.Orders)
-                .HasForeignKey(o => o.UserId);
+            modelBuilder.Entity<Order>(builder =>
+            {
+                // 1) Conversión del enum Status a string en la DB y marcarlo como NOT NULL
+                builder.Property(o => o.Status)
+                       .HasConversion<string>()
+                       .IsRequired();
 
+                // 2) Relación User → Orders (un User tiene muchas Orders)
+                builder.HasOne(o => o.User)
+                       .WithMany(u => u.Orders)     // navegación inversa en User.Orders
+                       .HasForeignKey(o => o.UserId)
+                       .OnDelete(DeleteBehavior.Restrict);
+                //Relacion Empleado asignado → Order
+                builder.HasOne(o => o.Employed)
+                        .WithMany(u => u.AssignedOrders)
+                        .HasForeignKey(o => o.EmployedId)
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                // 3) Relación Order → OrderHistory (una Order tiene muchas OrderHistory)
+                builder.HasMany(o => o.History)  // colección en Order
+                       .WithOne(h => h.Order)           // navegación inversa en OrderHistory.Order
+                       .HasForeignKey(h => h.OrderId)
+                       .OnDelete(DeleteBehavior.Cascade);
+            });
 
             base.OnModelCreating(modelBuilder);
         }

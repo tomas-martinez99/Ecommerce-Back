@@ -14,6 +14,7 @@ namespace Domain.Entities
         public string Password { get; set; }
         public Role Role { get; set; }
         public ICollection<Order> Orders { get; set; }
+        public ICollection<Order> AssignedOrders { get; set; }
         public int? RoleId { get; set; }
     }
 }
