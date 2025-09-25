@@ -1,5 +1,4 @@
-﻿using Domain.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Application.GetAllDtos
 {
-    public class OrderDto
+    public class ValueCategoryDto
     {
         public int Id { get; set; }
-        public UserDto User { get; set; }
-        public DateTime Created { get; set; }
+        public string Value { get; set; }
+
     }
 }

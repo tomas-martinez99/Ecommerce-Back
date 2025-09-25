@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace Application.GetAllDtos
 {
-    public class OrderDto
+    public class UserDto
     {
-        public int Id { get; set; }
-        public UserDto User { get; set; }
-        public DateTime Created { get; set; }
+        public int Id { get; set; } 
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public RoleDto Role { get; set; }
     }
 }

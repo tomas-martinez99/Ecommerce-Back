@@ -1,5 +1,11 @@
+using Application.Interfaces.Repositories;
+using Application.Interfaces.Service;
+using Application.Mapping;
+using Application.Service;
 using Infraestructure.Context;
+using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +17,19 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 34)) // Usá la versión que tengas instalada
     ));
 
+
+//Repository
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+//Service
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
+//AutoMapper
+
+builder.Services.AddAutoMapper(typeof(CategoryProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
