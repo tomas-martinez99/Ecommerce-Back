@@ -17,5 +17,11 @@ namespace Infraestructure.Repositories
         {
             _DbContextCategory = context;
         }
+        public async Task<Category?> GetByIdWithValuesAsync(int id)
+        {
+            return await _DbContextCategory.Categories
+                                 .Include(c => c.Values)
+                                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
     }
 }

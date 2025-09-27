@@ -9,5 +9,6 @@ namespace Application.CreateDtos
     public class CreateValueCategoryDto
     {
         public string Value { get; set; }    
+        
     }
 }

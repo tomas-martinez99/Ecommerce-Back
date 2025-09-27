@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Service;
@@ -35,6 +36,14 @@ namespace Application.Service
             return entity is null
                 ? null
                 : _mapper.Map<CategoryDto>(entity);
+        }
+
+        public async Task<DetailValueWithCategorie?> GetValuesCategoryById(int id)
+        {
+            var entity = await _repo.GetByIdWithValuesAsync(id);
+            return entity is null
+                ? null
+                : _mapper.Map<DetailValueWithCategorie>(entity);
         }
 
         public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto)

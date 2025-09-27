@@ -1,7 +1,9 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Service;
+using Application.Interfaces.Services;
 using Application.Mapping;
 using Application.Service;
+using Application.Services;
 using Infraestructure.Context;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,10 +23,12 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 //Repository
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IValueCategoryRepository, ValueCategoryRepository>();
 
 //Service
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IValueCategoryService, ValueCategoryService>();
 
 
 //AutoMapper

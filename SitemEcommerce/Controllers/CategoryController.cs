@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,19 @@ namespace Web.Controllers
             return Ok(list);
         }
 
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CategoryDto>> GetById(int id)
         {
             var dto = await _service.GetByIdAsync(id);
+            if (dto is null) return NotFound();
+            return Ok(dto);
+        }
+
+        [HttpGet("{id:int}/values")]
+        public async Task<ActionResult<DetailValueWithCategorie>> GetValuesWithValuesById(int id)
+        {
+            var dto = await _service.GetValuesCategoryById(id);
             if (dto is null) return NotFound();
             return Ok(dto);
         }
