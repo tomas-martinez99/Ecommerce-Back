@@ -10,18 +10,18 @@ using System.Threading.Tasks;
 
 namespace Infraestructure.Repositories
 {
-    public class CategoryRepository : GenericRepository<Category>, ICategoryRepository 
+    public class RoleRepository : GenericRepository<Role>, IRoleRepository
     {
         private readonly EcommerceDbContext _DbContextCategory;
-        public CategoryRepository(EcommerceDbContext context) : base(context)
+        public RoleRepository(EcommerceDbContext context) : base(context)
         {
             _DbContextCategory = context;
         }
-        public async Task<Category?> GetByIdWithValuesAsync(int id)
+        public async Task<Role?> GetByIdWithUsersAsync(int id)
         {
-            return await _DbContextCategory.Categories
-                                 .Include(c => c.Values)
-                                 .FirstOrDefaultAsync(c => c.Id == id);
+            return await _DbContextCategory.Roles
+                                 .Include(r => r.Users)
+                                 .FirstOrDefaultAsync(r => r.Id == id);
         }
     }
 }

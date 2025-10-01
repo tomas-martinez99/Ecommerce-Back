@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Application.Interfaces.Repositories
 {
-    public interface ICategoryRepository : IGenericRepository<Category>
+    public interface IUserRepository : IGenericRepository<User>
     {
-        Task<Category?> GetByIdWithValuesAsync(int id);
+        Task<User?>GetDetailByIdAsync(int id);
     }
 }

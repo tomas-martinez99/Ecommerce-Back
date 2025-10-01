@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,9 @@ namespace Application.GetAllDtos
     public class OrderDto
     {
         public int Id { get; set; }
-        public UserDto User { get; set; }
         public DateTime Created { get; set; }
+        public OrderStatus Status { get; set; }
+        public int UserId { get; set; }
+        public int? EmployedId { get; set; }
     }
 }

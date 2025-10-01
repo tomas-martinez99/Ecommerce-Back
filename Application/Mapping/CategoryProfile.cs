@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using AutoMapper;
 using Domain.Entities;
@@ -15,8 +16,10 @@ namespace Application.Mapping
         public CategoryProfile() {
             CreateMap<CreateCategoryDto, Category>();
             CreateMap<Category, CategoryDto>();
+            CreateMap<Category, DetailValueWithCategorie>();
             CreateMap<CreateValueCategoryDto, ValueCategory>();
             CreateMap<ValueCategory, ValueCategoryDto>();
+          
         }    
     }
 }

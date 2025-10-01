@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.CreateDtos
 {
-    public class CreateValueCategoryDto
+    public class CreateRoleDto
     {
-        public string Value { get; set; }    
-        
+        public string RoleName {  get; set; }
     }
 }

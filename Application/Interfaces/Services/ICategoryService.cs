@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Application.Interfaces.Service
     {
         Task<IEnumerable<CategoryDto>> GetAllAsync();
         Task<CategoryDto?> GetByIdAsync(int id);
+        Task<DetailValueWithCategorie?> GetValuesCategoryById(int id);
         Task<CategoryDto> CreateAsync(CreateCategoryDto dto);
         Task<bool> UpdateAsync(int id, CreateCategoryDto dto);
         Task<bool> DeleteAsync(int id);
