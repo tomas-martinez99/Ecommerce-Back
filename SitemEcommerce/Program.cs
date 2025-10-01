@@ -1,7 +1,9 @@
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Service;
+using Application.Interfaces.Services;
 using Application.Mapping;
 using Application.Service;
+using Application.Services;
 using Infraestructure.Context;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,15 +23,24 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 //Repository
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
+builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
 
 //Service
 
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IProviderService, ProviderService>();
+builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
 
 
 //AutoMapper
 
 builder.Services.AddAutoMapper(typeof(CategoryProfile));
+builder.Services.AddAutoMapper(typeof(ProductProfile));
+builder.Services.AddAutoMapper(typeof(ProviderProfile));
+builder.Services.AddAutoMapper(typeof(ProductCategoryProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

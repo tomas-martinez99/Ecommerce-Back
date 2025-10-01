@@ -8,7 +8,7 @@ namespace Application.GetAllDtos
 {
     public class ProductDto
     {
-        int Id { get; set; }
+        public int Id { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; } 
         public decimal Stock { get; set; }
