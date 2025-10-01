@@ -10,7 +10,9 @@ namespace Application.CreateDtos
     public class CreateOrderDto
     {
         public int UserId { get; set; }
-        public List<CreateOrderProductDto> Products { get; set; } = new List<CreateOrderProductDto>();
+        public int? EmployedId { get; set; }
+        public OrderStatus Status { get; set; }
+        public List<CreateOrderProductDto> Products { get; set; }
     }
 
 }
