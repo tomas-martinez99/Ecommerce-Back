@@ -1,5 +1,5 @@
 ﻿using Application.CreateDtos;
-using Application.DetailDto;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
