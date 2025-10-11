@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,7 +22,8 @@ namespace Domain.Entities
         public Provider Provider { get; set; }
         public int? ProviderId { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
-        public ICollection<ProductCategory> Categories { get; set; }
+        public string Brand { get; set; }
+        public string FamilyGroup { get; set; }
 
 
     }

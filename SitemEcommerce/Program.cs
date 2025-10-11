@@ -1,8 +1,6 @@
 using Application.Interfaces.Repositories;
-using Application.Interfaces.Service;
 using Application.Interfaces.Services;
 using Application.Mapping;
-using Application.Service;
 using Application.Services;
 using Infraestructure.Context;
 using Infraestructure.Repositories;
@@ -22,9 +20,6 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
 
 //Repository
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-builder.Services.AddScoped<IValueCategoryRepository, ValueCategoryRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
@@ -32,39 +27,46 @@ builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 builder.Services.AddScoped<IOrderHistoryRepository, OrderHistoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
-builder.Services.AddScoped<IProductCategoryRepository, ProductCategoryRepository>();
+
 
 
 //Service
 
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-builder.Services.AddScoped<IValueCategoryService, ValueCategoryService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IOrderProductService, OrderProductService>();
 builder.Services.AddScoped<IOrderHistoryService, OrderHistoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
-builder.Services.AddScoped<IProductCategoryService, ProductCategoryService>();
+
 
 
 //AutoMapper
 
-builder.Services.AddAutoMapper(typeof(CategoryProfile));
+
 builder.Services.AddAutoMapper(typeof(UserPorfile));
 builder.Services.AddAutoMapper(typeof(OrderProfile));
 builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddAutoMapper(typeof(ProviderProfile));
-builder.Services.AddAutoMapper(typeof(ProductCategoryProfile));
 
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("_myAllowSpecificOrigins", policy =>
+        policy.WithOrigins("http://localhost:3001")  // cambiar a tu URL de frontend
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials());
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

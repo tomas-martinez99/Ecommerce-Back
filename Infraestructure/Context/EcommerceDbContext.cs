@@ -12,16 +12,12 @@ namespace Infraestructure.Context
     {
         public EcommerceDbContext(DbContextOptions<EcommerceDbContext> options) 
             : base(options) { }
-
-        public DbSet<Category> Categories { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
-        public DbSet<ValueCategory> ValueCategories { get; set; }
-        public DbSet<ProductCategory> ProductCategories { get; set; }
         public DbSet<OrderHistory> OrderHistory { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -48,35 +44,13 @@ namespace Infraestructure.Context
                 .WithMany(pr => pr.Products)
                 .HasForeignKey(p => p.ProviderId);
 
-            //One-to-many relationship: Category → ValueCategory
-
-            modelBuilder.Entity<ValueCategory>()
-                .HasOne(vc => vc.Category)
-                .WithMany(c => c.Values)
-                .HasForeignKey(vc => vc.CategoryId);
 
             //One-to-many relationship: Role → User
 
             modelBuilder.Entity<User>()
                 .HasOne(u => u.Role)
                 .WithMany(r => r.Users)
-                .HasForeignKey(u => u.RoleId);
-
-            //Many-to-many relationship: Product ↔ Category
-
-            modelBuilder.Entity<ProductCategory>()
-                .HasKey(pc => new { pc.ProductId, pc.CategoryId });
-
-            modelBuilder.Entity<ProductCategory>()
-                .HasOne(pc => pc.Product)
-                .WithMany(p => p.Categories)
-                .HasForeignKey(pc => pc.ProductId);
-
-            modelBuilder.Entity<ProductCategory>()
-                .HasOne(pc => pc.Category)
-                .WithMany(c => c.Products)
-                .HasForeignKey(pc => pc.CategoryId);
-
+                .HasForeignKey(u => u.RoleId);;
 
             modelBuilder.Entity<Order>(builder =>
             {
