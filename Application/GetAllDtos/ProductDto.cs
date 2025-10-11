@@ -12,5 +12,9 @@ namespace Application.GetAllDtos
         public string ProductName { get; set; }
         public decimal Price { get; set; } 
         public decimal Stock { get; set; }
+
+        public ProviderDto Provider { get; set; }
+        public string Brand { get; set; }
+        public string FamilyGruop {  get; set; }
     }
 }
