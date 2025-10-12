@@ -14,8 +14,14 @@ namespace Application.Mapping
     {
         public ProductProfile()
         {
-            CreateMap<CreateProductDto, Product>();
+            CreateMap<CreateProductDto, Product>()
+            .ForMember(dest => dest.Provider, opt => opt.Ignore());
+
+
             CreateMap<Product, ProductDto>();
+               
+
+            CreateMap<Provider, ProviderDto>();
         }
     }
 }
