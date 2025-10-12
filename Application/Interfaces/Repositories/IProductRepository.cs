@@ -9,6 +9,6 @@ namespace Application.Interfaces.Repositories
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-
+        Task<IEnumerable<Product>> GetAllWithProviderAsync();
     }
 }

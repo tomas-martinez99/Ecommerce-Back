@@ -23,6 +23,12 @@ namespace Web.Controllers
             var list = await _service.GetAllAsync();
             return Ok(list);
         }
+        [HttpGet("admin")]
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProvider()
+        {
+            var list = await _service.GetAllProviderAsync();
+            return Ok(list);
+        }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<ProductDto>> GetById(int id)

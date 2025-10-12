@@ -16,5 +16,7 @@ namespace Application.CreateDtos
         public decimal Cost { get; set; }
         public decimal stock { get; set; }
         public int ProviderId { get; set; }
+        public string Brand { get; set; }
+        public string FamilyGroup { get; set; }
     }
 }

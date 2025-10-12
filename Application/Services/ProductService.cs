@@ -16,17 +16,25 @@ namespace Application.Services
     {
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
+        private readonly IProviderRepository _providerRepository;
 
-        public ProductService(IProductRepository repo, IMapper mapper)
+        public ProductService(IProductRepository repo, IMapper mapper, IProviderRepository providerRepository)
         {
             _repo = repo;
             _mapper = mapper;
+            _providerRepository = providerRepository;
         }
         public async Task<IEnumerable<ProductDto>> GetAllAsync()
         {
             var entities = await _repo.GetAllAsync();
             return _mapper.Map<IEnumerable<ProductDto>>(entities);
         }
+        public async Task<IEnumerable<ProductDto>> GetAllProviderAsync()
+        {
+            var entities = await _repo.GetAllWithProviderAsync();
+            return _mapper.Map<IEnumerable<ProductDto>>(entities);
+        }
+
 
         public async Task<ProductDto> GetByIdAsync(int id)
         {
@@ -39,6 +47,10 @@ namespace Application.Services
         public async Task<ProductDto> CreateAsync(CreateProductDto dto)
         {
             var entity = _mapper.Map<Product>(dto);
+            entity.Provider = await _providerRepository.GetByIdAsync(dto.ProviderId);
+
+            if (entity.Provider == null)
+                throw new Exception($"No existe un proveedor con Id {dto.ProviderId}");
             await _repo.AddAsync(entity);
             await _repo.SaveChangesAsync();
             return _mapper.Map<ProductDto>(entity);
@@ -60,7 +72,7 @@ namespace Application.Services
                 return false;
 
             _repo.DeleteAsync(entity);
-            await _repo.SaveChangesAsync();
+           
             return true;
         }
     }
