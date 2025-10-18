@@ -142,6 +142,10 @@ namespace Infraestructure.Migrations
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("SKU")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<decimal>("Stock")
                         .HasColumnType("decimal(65,30)");
 

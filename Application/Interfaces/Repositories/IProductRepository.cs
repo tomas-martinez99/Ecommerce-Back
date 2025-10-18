@@ -10,5 +10,6 @@ namespace Application.Interfaces.Repositories
     public interface IProductRepository : IGenericRepository<Product>
     {
         Task<IEnumerable<Product>> GetAllWithProviderAsync();
+        Task<Product?> GetByIdWithRelationsAsync(int id);
     }
 }

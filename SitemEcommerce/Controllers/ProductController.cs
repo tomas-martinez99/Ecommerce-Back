@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -46,7 +47,7 @@ namespace Web.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, CreateProductDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody]CreateProductDto dto)
         {
             var updated = await _service.UpdateAsync(id, dto);
             return updated ? NoContent() : NotFound();

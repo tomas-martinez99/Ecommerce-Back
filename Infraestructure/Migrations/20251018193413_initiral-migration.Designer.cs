@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20251011205919_First-Migration")]
-    partial class FirstMigration
+    [Migration("20251018193413_initiral-migration")]
+    partial class initiralmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -144,6 +144,10 @@ namespace Infraestructure.Migrations
 
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SKU")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Stock")
                         .HasColumnType("decimal(65,30)");

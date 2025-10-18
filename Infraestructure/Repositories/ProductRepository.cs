@@ -29,5 +29,12 @@ namespace Infraestructure.Repositories
                 .Include(p => p.Provider)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+        public async Task<Product?> GetByIdWithRelationsAsync(int id)
+        {
+            return await _DbContextProduct.Products
+                .Include(p => p.Provider)         // ejemplo de navegación
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using AutoMapper;
 using Domain.Entities;
@@ -21,7 +22,7 @@ namespace Application.Mapping
             CreateMap<Product, ProductDto>();
                
 
-            CreateMap<Provider, ProviderDto>();
+            CreateMap<Product, DetailProductDto>();
         }
     }
 }
