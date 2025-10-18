@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -36,15 +37,13 @@ namespace Application.Services
         }
 
 
-        public async Task<ProductDto> GetByIdAsync(int id)
+        public async Task<DetailProductDto?> GetByIdAsync(int id)
         {
-            var entity = await _repo.GetByIdAsync(id);
-            return entity is null
-                ? null
-                : _mapper.Map<ProductDto>(entity);
+            var product = await _repo.GetByIdWithRelationsAsync(id) ?? await _repo.GetByIdAsync(id);
+            return product is null ? null : _mapper.Map<DetailProductDto>(product);
         }
 
-        public async Task<ProductDto> CreateAsync(CreateProductDto dto)
+        public async Task<DetailProductDto> CreateAsync(CreateProductDto dto)
         {
             var entity = _mapper.Map<Product>(dto);
             entity.Provider = await _providerRepository.GetByIdAsync(dto.ProviderId);
@@ -53,15 +52,16 @@ namespace Application.Services
                 throw new Exception($"No existe un proveedor con Id {dto.ProviderId}");
             await _repo.AddAsync(entity);
             await _repo.SaveChangesAsync();
-            return _mapper.Map<ProductDto>(entity);
+            return _mapper.Map<DetailProductDto>(entity);
         }
 
-        public async Task<bool> UpdateAsync(int id, CreateProductDto dto)
+        public async Task<bool>UpdateAsync(int id, CreateProductDto dto)
         {
-            var entity = await _repo.GetByIdAsync(id);
-            _mapper.Map(dto, entity!);
-            _repo.UpdateAsync(entity!);
-            await _repo.SaveChangesAsync();
+            var product = await _repo.GetByIdWithRelationsAsync(id) ?? await _repo.GetByIdAsync(id);
+            if (product == null) throw new KeyNotFoundException("Product not found");
+
+            _mapper.Map(dto, product);           // copia valores del DTO sobre la entidad rastreada
+            await _repo.SaveChangesAsync(); // persistir una sola vez
             return true;
         }
 
@@ -72,7 +72,8 @@ namespace Application.Services
                 return false;
 
             _repo.DeleteAsync(entity);
-           
+            await _repo.SaveChangesAsync();
+
             return true;
         }
     }

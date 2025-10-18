@@ -80,5 +80,13 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<EcommerceDbContext>();
+    context.Database.Migrate(); // Aplica migraciones pendientes
+
+    // Ejecutar la seed
+    SeedData.Initialize(context); // Asegurate de tener esta clase en Infraestructure/Persistence
+}
 
 app.Run();

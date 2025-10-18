@@ -23,23 +23,22 @@ namespace Infraestructure.Repositories
             return await _dbContext.Set<T>().FindAsync(id);
         }
 
-        public async Task<T> AddAsync(T entity)
+        public virtual Task AddAsync(T entity)
         {
-            await _dbContext.Set<T>().AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
-            return entity;
+            _dbContext.Set<T>().Add(entity);
+            return Task.CompletedTask;
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual Task UpdateAsync(T entity)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
-        public async Task DeleteAsync(T entity)
+        public virtual Task DeleteAsync(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
-            await _dbContext.SaveChangesAsync();
+            return Task.CompletedTask;
         }
 
         public async Task<IReadOnlyList<T>> GetAllAsync()
@@ -48,7 +47,9 @@ namespace Infraestructure.Repositories
                 .Set<T>()
                 .ToListAsync();
         }
-        public async Task SaveChangesAsync()
-            => await _dbContext.SaveChangesAsync();
+        public virtual async Task SaveChangesAsync()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
     }
 }
