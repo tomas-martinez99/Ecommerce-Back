@@ -41,7 +41,6 @@ namespace Application.Services
         {
             var entity = _mapper.Map<Provider>(dto);
             await _repo.AddAsync(entity);
-            await _repo.SaveChangesAsync();
             return _mapper.Map<ProviderDto>(entity);
         }
 
@@ -49,8 +48,7 @@ namespace Application.Services
         {
             var entity = await _repo.GetByIdAsync(id);
             _mapper.Map(dto, entity!);
-            _repo.UpdateAsync(entity!);
-            await _repo.SaveChangesAsync();
+            await _repo.UpdateAsync(entity!);
             return true;
         }
 
@@ -60,8 +58,7 @@ namespace Application.Services
             if (entity is null)
                 return false;
 
-            _repo.DeleteAsync(entity);
-            await _repo.SaveChangesAsync();
+            await _repo.DeleteAsync(entity);
             return true;
         }
     }
