@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20251018193413_initiral-migration")]
-    partial class initiralmigration
+    [Migration("20251018210332_initial-migration")]
+    partial class initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,6 +131,10 @@ namespace Infraestructure.Migrations
 
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Length")
                         .HasColumnType("decimal(65,30)");
