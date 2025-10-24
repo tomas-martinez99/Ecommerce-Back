@@ -129,6 +129,10 @@ namespace Infraestructure.Migrations
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(65,30)");
 
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<decimal>("Length")
                         .HasColumnType("decimal(65,30)");
 
