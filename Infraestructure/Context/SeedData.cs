@@ -47,24 +47,40 @@ namespace Infraestructure.Context
                 context.SaveChanges();
             }
 
-           
+
 
             //Products
             if (!context.Products.Any())
             {
-                context.Products.AddRange(
-                new Product { Id = 1, SKU = "1081N", ProductName = "Kit de plastico Samsh 110 Negro",ImgUrl= "/public/productImg/1081N.jpg", Description = "Kit de plastico VC Compatible con: Gilera smash", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
-                new Product { Id = 2, SKU = "FV015NP", ProductName = "Funda antideslizante Motomel 110", ImgUrl = "/public/productImg/FV015NP.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 3, SKU = "70766", ProductName = "Kit trnasmision Titan 150", ImgUrl = "/public/productImg/70766.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "Riffel", FamilyGroup = "Transmision" },
-                new Product { Id = 4, SKU = "FV015N", ProductName = "Funda antideslizante Universal 110 Negra", ImgUrl = "/public/productImg/FV015N.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 5, SKU = "FV015A", ProductName = "Funda antideslizante Universal 110 Azul", ImgUrl = "/public/productImg/FV015A.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 2, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 6, SKU = "BXgg200", ProductName = "Kit Transmision Honda biz 125 ", ImgUrl = "/public/productImg/BXgg200.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 2, Brand = "GianGiu", FamilyGroup = "Transmision" },
-                new Product { Id = 7, SKU = "1081ABT", ProductName = "Kit de plastico Smash 110 Azul Bitono", ImgUrl = "/public/productImg/1081ABT.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 3, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
-                new Product { Id = 8, SKU = "6323", ProductName = "Casco Influence Negro Mate y Amarillo S", ImgUrl = "/public/productImg/6323.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 3, Brand = "Vertigo", FamilyGroup = "Cascos" },
-                new Product { Id = 9, SKU = "6322", ProductName = "Casco Influence Negro Mate y Amarillo M", ImgUrl = "/public/productImg/6322.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" },
-                new Product { Id = 10, SKU = "6321", ProductName = "Casco Influence Negro Mate y Amarillo L", ImgUrl = "/public/productImg/6321.jpg", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" }
-
-            );
+                var products = new List<Product>
+            {
+                new Product { Id = 1, SKU = "1081N", ProductName = "Kit de plastico Samsh 110 Negro",Description = "Kit de plastico VC Compatible con: Gilera smash", Price = 25000, Cost = 18500, Stock = 1, ProviderId = 1, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
+                new Product { Id = 2, SKU = "FV015NP", ProductName = "Funda antideslizante Motomel 110", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 2, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
+                new Product { Id = 3, SKU = "70766", ProductName = "Kit trnasmision Titan 150", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 3, ProviderId = 1, Brand = "Riffel", FamilyGroup = "Transmision" },
+                new Product { Id = 4, SKU = "FV015N", ProductName = "Funda antideslizante Universal 110 Negra", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 4, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
+                new Product { Id = 5, SKU = "FV015A", ProductName = "Funda antideslizante Universal 110 Azul", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 5, ProviderId = 2, Brand = "TSL", FamilyGroup = "Accesorios" },
+                new Product { Id = 6, SKU = "BXgg200", ProductName = "Kit Transmision Honda biz 125 ", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 6, ProviderId = 2, Brand = "GianGiu", FamilyGroup = "Transmision" },
+                new Product { Id = 7, SKU = "1081ABT", ProductName = "Kit de plastico Smash 110 Azul Bitono", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 7, ProviderId = 3, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
+                new Product { Id = 8, SKU = "6323", ProductName = "Casco Influence Negro Mate y Amarillo S", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 8, ProviderId = 3, Brand = "Vertigo", FamilyGroup = "Cascos" },
+                new Product { Id = 9, SKU = "6322", ProductName = "Casco Influence Negro Mate y Amarillo M", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 9, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" },
+                new Product { Id = 10, SKU = "6321", ProductName = "Casco Influence Negro Mate y Amarillo L", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" }
+                };
+                context.Products.AddRange(products);
+                context.SaveChanges();
+                var productImages = new List<ProductImage>
+            {
+                new ProductImage { ProductId = 1, Url = "/images/products/1081N.jpg", IsMain = true },
+                new ProductImage { ProductId = 2, Url = "/images/products/FV015NP.jpg", IsMain = true },
+                new ProductImage { ProductId = 3, Url = "/images/products/70766.jpg", IsMain = true },
+                new ProductImage { ProductId = 4, Url = "/images/products/FV015N.jpg", IsMain = true },
+                new ProductImage { ProductId = 5, Url = "/images/products/FV015A.jpg", IsMain = true },
+                new ProductImage { ProductId = 6, Url = "/images/products/BXgg200.jpg", IsMain = true },
+                new ProductImage { ProductId = 7, Url = "/images/products/1081ABT.jpg", IsMain = true },
+                new ProductImage { ProductId = 8, Url = "/images/products/6323.jpg", IsMain = true },
+                new ProductImage { ProductId = 9, Url = "/images/products/6322.jpg", IsMain = true },
+                new ProductImage { ProductId = 10, Url = "/images/products/6321.jpg", IsMain = true }             
+            };
+                context.ProductImages.AddRange(productImages);
                 context.SaveChanges();
             }
             if (!context.Orders.Any())

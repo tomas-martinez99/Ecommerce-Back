@@ -10,12 +10,12 @@ namespace Application.GetAllDtos
     {
         public int Id { get; set; }
         public string SKU { get; set; }
-        public string ImgUrl { get; set; }
         public string ProductName { get; set; }
         public decimal Price { get; set; } 
         public decimal Stock { get; set; }
         public int ProviderId { get; set; }
         public ProviderDto Provider { get; set; }
+        public List<ProductImageDto> Images { get; set; } = new();
         public string Brand { get; set; }
         public string FamilyGroup { get; set; }
     }

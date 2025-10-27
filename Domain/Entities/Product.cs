@@ -13,7 +13,6 @@ namespace Domain.Entities
         public string SKU { get; set; }
         public string ProductName { get; set; }
         public string Description { get; set; }
-        public string ImgUrl { get; set; }
         public decimal Price { get; set; }
         public decimal Cost { get; set; }
         public decimal Stock {  get; set; }
@@ -26,6 +25,7 @@ namespace Domain.Entities
         public ICollection<OrderProduct> Orders { get; set; }
         public string Brand { get; set; }
         public string FamilyGroup { get; set; }
+        public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
 
     }

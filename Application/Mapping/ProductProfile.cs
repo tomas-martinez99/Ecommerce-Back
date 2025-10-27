@@ -15,14 +15,18 @@ namespace Application.Mapping
     {
         public ProductProfile()
         {
+            CreateMap<Product, ProductDto>()
+               .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+                .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider));
+
             CreateMap<CreateProductDto, Product>()
             .ForMember(dest => dest.Provider, opt => opt.Ignore());
+           
+            CreateMap<ProductImage, ProductImageDto>();
 
-
-            CreateMap<Product, ProductDto>();
-               
-
-            CreateMap<Product, DetailProductDto>();
+            CreateMap<Product, DetailProductDto>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+                .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider));
         }
     }
 }
