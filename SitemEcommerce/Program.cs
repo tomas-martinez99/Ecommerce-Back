@@ -6,6 +6,7 @@ using Infraestructure.Context;
 using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Web.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 34)) // Usá la versión que tengas instalada
     ));
 
+builder.Services.AddScoped<IImageStorageService, LocalImageStorageService>();
+
 
 //Repository
 
@@ -27,8 +30,8 @@ builder.Services.AddScoped<IOrderProductRepository, OrderProductRepository>();
 builder.Services.AddScoped<IOrderHistoryRepository, OrderHistoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IProviderRepository, ProviderRepository>();
-
-
+builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 //Service
 
@@ -76,6 +79,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 

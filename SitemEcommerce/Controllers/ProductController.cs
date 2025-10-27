@@ -3,6 +3,7 @@ using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
+using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -32,7 +33,7 @@ namespace Web.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<ProductDto>> GetById(int id)
+        public async Task<ActionResult<DetailProductDto>> GetById(int id)
         {
             var dto = await _service.GetByIdAsync(id);
             if (dto is null) return NotFound();
@@ -40,7 +41,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductDto>> Create(CreateProductDto dto)
+        public async Task<ActionResult<DetailProductDto>> Create(CreateProductDto dto)
         {
             var created = await _service.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
@@ -58,6 +59,34 @@ namespace Web.Controllers
         {
             var deleted = await _service.DeleteAsync(id);
             return deleted ? NoContent() : NotFound();
+        }
+
+        // 🔹 POST: api/products/5/images
+        [HttpPost("{id}/images")]
+        public async Task<ActionResult<ProductImageDto>> AddImage(int id, IFormFile file, [FromQuery] bool isMain = false)
+        {
+            if (file == null || file.Length == 0) return BadRequest("No se subió ninguna imagen.");
+
+            var image = await _service.AddImageAsync(id, file, isMain);
+            return Ok(image);
+        }
+
+        // 🔹 DELETE: api/products/5/images/10
+        [HttpDelete("{id}/images/{imageId}")]
+        public async Task<IActionResult> RemoveImage(int id, int imageId)
+        {
+            var success = await _service.RemoveImageAsync(id, imageId);
+            if (!success) return NotFound();
+            return NoContent();
+        }
+
+        // 🔹 PUT: api/products/5/images/10/set-main
+        [HttpPut("{id}/images/{imageId}/set-main")]
+        public async Task<IActionResult> SetMainImage(int id, int imageId)
+        {
+            var success = await _service.SetMainImageAsync(id, imageId);
+            if (!success) return NotFound();
+            return NoContent();
         }
     }
 }

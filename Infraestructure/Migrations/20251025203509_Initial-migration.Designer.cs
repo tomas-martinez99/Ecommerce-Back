@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20251018210332_initial-migration")]
-    partial class initialmigration
+    [Migration("20251025203509_Initial-migration")]
+    partial class Initialmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,10 +132,6 @@ namespace Infraestructure.Migrations
                     b.Property<decimal>("Height")
                         .HasColumnType("decimal(65,30)");
 
-                    b.Property<string>("ImgUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<decimal>("Length")
                         .HasColumnType("decimal(65,30)");
 
@@ -167,6 +163,31 @@ namespace Infraestructure.Migrations
                     b.HasIndex("ProviderId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("Domain.Entities.ProductImage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages");
                 });
 
             modelBuilder.Entity("Domain.Entities.Provider", b =>
@@ -290,6 +311,17 @@ namespace Infraestructure.Migrations
                     b.Navigation("Provider");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProductImage", b =>
+                {
+                    b.HasOne("Domain.Entities.Product", "Product")
+                        .WithMany("Images")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Role", "Role")
@@ -308,6 +340,8 @@ namespace Infraestructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
                 {
+                    b.Navigation("Images");
+
                     b.Navigation("Orders");
                 });
 

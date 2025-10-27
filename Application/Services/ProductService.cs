@@ -5,6 +5,7 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +19,22 @@ namespace Application.Services
         private readonly IProductRepository _repo;
         private readonly IMapper _mapper;
         private readonly IProviderRepository _providerRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IImageStorageService _imageStorage;
 
-        public ProductService(IProductRepository repo, IMapper mapper, IProviderRepository providerRepository)
+        public ProductService(IProductRepository repo, IUnitOfWork unitOfWork, IImageStorageService imageStorage, IMapper mapper, IProviderRepository providerRepository)
         {
             _repo = repo;
             _mapper = mapper;
             _providerRepository = providerRepository;
+            _unitOfWork = unitOfWork;
+            _imageStorage = imageStorage;
         }
-        public async Task<IEnumerable<ProductDto>> GetAllAsync()
+        //  Obtener todos los productos con imágenes
+        public async Task<IReadOnlyList<ProductDto>> GetAllAsync()
         {
-            var entities = await _repo.GetAllAsync();
-            return _mapper.Map<IEnumerable<ProductDto>>(entities);
+            var products = await _unitOfWork.Products.GetAllWithImagesAsync();
+            return _mapper.Map<IReadOnlyList<ProductDto>>(products);
         }
         public async Task<IEnumerable<ProductDto>> GetAllProviderAsync()
         {
@@ -36,43 +42,106 @@ namespace Application.Services
             return _mapper.Map<IEnumerable<ProductDto>>(entities);
         }
 
-
+        //  Obtener producto por Id con imágenes
         public async Task<DetailProductDto?> GetByIdAsync(int id)
         {
-            var product = await _repo.GetByIdWithRelationsAsync(id) ?? await _repo.GetByIdAsync(id);
+            var product = await _unitOfWork.Products.GetByIdWithImagesAsync(id);
             return product is null ? null : _mapper.Map<DetailProductDto>(product);
         }
 
+        //  Crear producto
         public async Task<DetailProductDto> CreateAsync(CreateProductDto dto)
         {
             var entity = _mapper.Map<Product>(dto);
-            entity.Provider = await _providerRepository.GetByIdAsync(dto.ProviderId);
 
-            if (entity.Provider == null)
+            // Validar proveedor
+            var provider = await _unitOfWork.Providers.GetByIdAsync(dto.ProviderId);
+            if (provider == null)
                 throw new Exception($"No existe un proveedor con Id {dto.ProviderId}");
-            await _repo.AddAsync(entity);
-            await _repo.SaveChangesAsync();
+
+            entity.Provider = provider;
+
+            await _unitOfWork.Products.AddAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
+
             return _mapper.Map<DetailProductDto>(entity);
         }
 
-        public async Task<bool>UpdateAsync(int id, CreateProductDto dto)
+        // 🔹 Actualizar producto
+        public async Task<bool> UpdateAsync(int id, CreateProductDto dto)
         {
-            var product = await _repo.GetByIdWithRelationsAsync(id) ?? await _repo.GetByIdAsync(id);
-            if (product == null) throw new KeyNotFoundException("Product not found");
+            var product = await _unitOfWork.Products.GetByIdWithImagesAsync(id);
+            if (product == null) throw new KeyNotFoundException("Producto no encontrado");
 
-            _mapper.Map(dto, product);           // copia valores del DTO sobre la entidad rastreada
-            await _repo.SaveChangesAsync(); // persistir una sola vez
+            _mapper.Map(dto, product);
+            await _unitOfWork.Products.UpdateAsync(product);
+            await _unitOfWork.SaveChangesAsync();
+
             return true;
         }
 
+        // 🔹 Eliminar producto
         public async Task<bool> DeleteAsync(int id)
         {
-            var entity = await _repo.GetByIdAsync(id);
-            if (entity is null)
-                return false;
+            var entity = await _unitOfWork.Products.GetByIdWithImagesAsync(id);
+            if (entity is null) return false;
 
-            _repo.DeleteAsync(entity);
-            await _repo.SaveChangesAsync();
+            // Eliminar imágenes físicas asociadas
+            foreach (var img in entity.Images)
+                await _imageStorage.DeleteAsync(img.Url);
+
+            await _unitOfWork.Products.DeleteAsync(entity);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        // 🔹 Agregar imagen a un producto
+        public async Task<ProductImageDto> AddImageAsync(int productId, IFormFile file, bool isMain = false)
+        {
+            var product = await _unitOfWork.Products.GetByIdWithImagesAsync(productId);
+            if (product == null) throw new Exception("Producto no encontrado");
+
+            var url = await _imageStorage.UploadAsync(file.OpenReadStream(), file.FileName, "products");
+
+            var image = new ProductImage
+            {
+                Url = url,
+                ProductId = productId,
+                IsMain = isMain
+            };
+
+            await _unitOfWork.ProductImages.AddAsync(image);
+
+            if (isMain)
+                await _unitOfWork.ProductImages.SetMainImageAsync(productId, image.Id);
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return _mapper.Map<ProductImageDto>(image);
+        }
+
+        // 🔹 Eliminar imagen de un producto
+        public async Task<bool> RemoveImageAsync(int productId, int imageId)
+        {
+            var image = await _unitOfWork.ProductImages.GetByIdAsync(imageId);
+            if (image == null || image.ProductId != productId) return false;
+
+            await _imageStorage.DeleteAsync(image.Url);
+            await _unitOfWork.ProductImages.DeleteAsync(image);
+            await _unitOfWork.SaveChangesAsync();
+
+            return true;
+        }
+
+        // 🔹 Marcar imagen como principal
+        public async Task<bool> SetMainImageAsync(int productId, int imageId)
+        {
+            var product = await _unitOfWork.Products.GetByIdWithImagesAsync(productId);
+            if (product == null) return false;
+
+            await _unitOfWork.ProductImages.SetMainImageAsync(productId, imageId);
+            await _unitOfWork.SaveChangesAsync();
 
             return true;
         }

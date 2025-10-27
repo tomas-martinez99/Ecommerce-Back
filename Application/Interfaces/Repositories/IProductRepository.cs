@@ -11,5 +11,9 @@ namespace Application.Interfaces.Repositories
     {
         Task<IEnumerable<Product>> GetAllWithProviderAsync();
         Task<Product?> GetByIdWithRelationsAsync(int id);
+        Task<Product?> GetBySkuAsync(string sku);
+        Task<Product?> GetBySkuWithRelationsAsync(string sku);
+        Task<Product?> GetByIdWithImagesAsync(int id);
+        Task<IReadOnlyList<Product>> GetAllWithImagesAsync();
     }
 }
