@@ -9,5 +9,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IProviderRepository : IGenericRepository<Provider>
     {
+        Task<Provider> GetWithProductsAsync(int id);
+        Task<IEnumerable<Provider>> GetAllWithProductsAsync();
     }
 }
