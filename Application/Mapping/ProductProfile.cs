@@ -17,16 +17,33 @@ namespace Application.Mapping
         {
             CreateMap<Product, ProductDto>()
                .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider));
+                .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
+                .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
+
+            CreateMap<Product, ProductAdminDto>()
+              .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+               .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider))
+               .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
+               .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
 
             CreateMap<CreateProductDto, Product>()
-            .ForMember(dest => dest.Provider, opt => opt.Ignore());
-           
+            .ForMember(dest => dest.Provider, opt => opt.Ignore())
+            .ForMember(dest => dest.Brand, opt => opt.Ignore())
+            .ForMember(dest => dest.ProductGroup, opt => opt.Ignore());
+
             CreateMap<ProductImage, ProductImageDto>();
 
             CreateMap<Product, DetailProductDto>()
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
-                .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider));
+            .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
+            .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
+
+
+            CreateMap<Product, DetailProductAdminDto>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
+            .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider))
+            .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
+            .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
         }
     }
 }

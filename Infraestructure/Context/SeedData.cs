@@ -46,7 +46,36 @@ namespace Infraestructure.Context
              );
                 context.SaveChanges();
             }
-
+            // Brands
+            if (!context.Brands.Any())
+            {
+                context.Brands.AddRange(
+                    new Brand { Id = 1, BrandName = "PlasticaVC" },
+                    new Brand { Id = 2, BrandName = "TSL" },
+                    new Brand { Id = 3, BrandName = "Riffel" },
+                    new Brand { Id = 4, BrandName = "GianGiu" },
+                    new Brand { Id = 5, BrandName = "Vertigo" },
+                    new Brand { Id = 6, BrandName = "Yuasa" },
+                    new Brand { Id = 7, BrandName = "HorngFortune" },
+                    new Brand { Id = 8, BrandName = "Piton" },
+                    new Brand { Id = 9, BrandName = "Protork" }
+                );
+                context.SaveChanges();
+            }
+            if (!context.ProductGroups.Any())
+            {
+                context.ProductGroups.AddRange(
+                    new ProductGroup { Id = 1, Name = "Plasticos" },
+                    new ProductGroup { Id = 2, Name = "Accesorios" },
+                    new ProductGroup { Id = 3, Name = "Transmision" },
+                    new ProductGroup { Id = 4, Name = "Cascos" },
+                    new ProductGroup { Id = 5, Name = "Baterias" },
+                    new ProductGroup { Id = 6, Name = "Cubiertas" },
+                    new ProductGroup { Id = 7, Name = "Lingas" },
+                    new ProductGroup { Id = 8, Name = "indumentaria" }
+                );
+                context.SaveChanges();
+            }
 
 
             //Products
@@ -54,16 +83,20 @@ namespace Infraestructure.Context
             {
                 var products = new List<Product>
             {
-                new Product { Id = 1, SKU = "1081N", ProductName = "Kit de plastico Samsh 110 Negro",Description = "Kit de plastico VC Compatible con: Gilera smash", Price = 25000, Cost = 18500, Stock = 1, ProviderId = 1, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
-                new Product { Id = 2, SKU = "FV015NP", ProductName = "Funda antideslizante Motomel 110", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 2, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 3, SKU = "70766", ProductName = "Kit trnasmision Titan 150", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 3, ProviderId = 1, Brand = "Riffel", FamilyGroup = "Transmision" },
-                new Product { Id = 4, SKU = "FV015N", ProductName = "Funda antideslizante Universal 110 Negra", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 4, ProviderId = 1, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 5, SKU = "FV015A", ProductName = "Funda antideslizante Universal 110 Azul", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 5, ProviderId = 2, Brand = "TSL", FamilyGroup = "Accesorios" },
-                new Product { Id = 6, SKU = "BXgg200", ProductName = "Kit Transmision Honda biz 125 ", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 6, ProviderId = 2, Brand = "GianGiu", FamilyGroup = "Transmision" },
-                new Product { Id = 7, SKU = "1081ABT", ProductName = "Kit de plastico Smash 110 Azul Bitono", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 7, ProviderId = 3, Brand = "PlasticaVC", FamilyGroup = "Plasticos" },
-                new Product { Id = 8, SKU = "6323", ProductName = "Casco Influence Negro Mate y Amarillo S", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 8, ProviderId = 3, Brand = "Vertigo", FamilyGroup = "Cascos" },
-                new Product { Id = 9, SKU = "6322", ProductName = "Casco Influence Negro Mate y Amarillo M", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 9, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" },
-                new Product { Id = 10, SKU = "6321", ProductName = "Casco Influence Negro Mate y Amarillo L", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, Brand = "Vertigo", FamilyGroup = "Cascos" }
+                new Product { Id = 1, SKU = "1081N", ProductName = "Kit de plastico Samsh 110 Negro", Description = "Kit de plastico VC Compatible con: Gilera smash", Price = 25000, Cost = 18500, Stock = 1, ProviderId = 1, BrandId = 1, ProductGroupId = 1 },
+    new Product { Id = 2, SKU = "FV015NP", ProductName = "Funda antideslizante Motomel 110", Description = "Funda antideslizante Para motomel blitz 110", Price = 25000, Cost = 18500, Stock = 2, ProviderId = 1, BrandId = 2, ProductGroupId = 2 },
+    new Product { Id = 3, SKU = "70766", ProductName = "Kit transmision Titan 150", Description = "Kit de transmisión completo para Honda Titan", Price = 25000, Cost = 18500, Stock = 3, ProviderId = 1, BrandId = 3, ProductGroupId = 3 },
+    new Product { Id = 4, SKU = "FV015N", ProductName = "Funda antideslizante Universal 110 Negra", Description = "Funda antideslizante universal", Price = 25000, Cost = 18500, Stock = 4, ProviderId = 1, BrandId = 2, ProductGroupId = 2 },
+    new Product { Id = 5, SKU = "FV015A", ProductName = "Funda antideslizante Universal 110 Azul", Description = "Funda antideslizante universal", Price = 25000, Cost = 18500, Stock = 5, ProviderId = 2, BrandId = 2, ProductGroupId = 2 },
+    new Product { Id = 6, SKU = "BXgg200", ProductName = "Kit Transmision Honda biz 125", Description = "Kit de transmisión para Honda Biz", Price = 25000, Cost = 18500, Stock = 6, ProviderId = 2, BrandId = 4, ProductGroupId = 3 },
+    new Product { Id = 7, SKU = "1081ABT", ProductName = "Kit de plastico Smash 110 Azul Bitono", Description = "Kit de plástico azul bitono", Price = 25000, Cost = 18500, Stock = 7, ProviderId = 3, BrandId = 1, ProductGroupId = 1 },
+    new Product { Id = 8, SKU = "6323", ProductName = "Casco Influence Negro Mate y Amarillo S", Description = "Casco talla S", Price = 25000, Cost = 18500, Stock = 8, ProviderId = 3, BrandId = 5, ProductGroupId = 4 },
+    new Product { Id = 9, SKU = "6322", ProductName = "Casco Influence Negro Mate y Amarillo M", Description = "Casco talla M", Price = 25000, Cost = 18500, Stock = 9, ProviderId = 1, BrandId = 5, ProductGroupId = 4 },
+    new Product { Id = 10, SKU = "6321", ProductName = "Casco Influence Negro Mate y Amarillo L", Description = "Casco talla L", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, BrandId = 5, ProductGroupId = 4 },
+     new Product { Id = 11, SKU = "BAT-7104", ProductName = "Bateria YT5A", Description = "Bateria yuasa YT5-A Apta para motos 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, BrandId = 6, ProductGroupId = 5 },
+      new Product { Id = 12, SKU = "4868", ProductName = "Cubierta 80/100-14", Description = "Cubierta trasera para motos 110", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, BrandId = 7, ProductGroupId = 6 },
+       new Product { Id = 13, SKU = "lin-941", ProductName = "Linga Piton", Description = "Linga piton 25mm X 1200mm color negra y plata", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, BrandId = 8, ProductGroupId = 7 },
+        new Product { Id = 14, SKU = "tork-6201", ProductName = "Antiparras protork Azules", Description = "Antiparraz Protork azules", Price = 25000, Cost = 18500, Stock = 10, ProviderId = 1, BrandId = 9, ProductGroupId = 8 }
                 };
                 context.Products.AddRange(products);
                 context.SaveChanges();

@@ -1,4 +1,5 @@
 ﻿using Application.Interfaces.Repositories;
+using Domain.Entities;
 using Infraestructure.Context;
 using System;
 using System.Collections.Generic;
@@ -14,17 +15,24 @@ namespace Infraestructure.Repositories
 
         public IProductRepository Products { get; }
         public IProductImageRepository ProductImages { get; }
-        public IProviderRepository Providers { get; }   // 👈 Implementar
+        public IProviderRepository Providers { get; }
+        public IBrandRepository Brands { get; }
+        public IProductGroupRepository ProductGroups { get; }
+        // 👈 Implementar
 
         public UnitOfWork(EcommerceDbContext context,
                           IProductRepository productRepository,
                           IProductImageRepository productImageRepository,
-                          IProviderRepository providerRepository)
+                          IProviderRepository providerRepository,
+                          IProductGroupRepository productGroupRepository,
+                          IBrandRepository brandRepository)
         {
             _context = context;
             Products = productRepository;
             ProductImages = productImageRepository;
             Providers = providerRepository;
+            Brands = brandRepository;
+            ProductGroups = productGroupRepository;
         }
 
         public async Task<int> SaveChangesAsync()

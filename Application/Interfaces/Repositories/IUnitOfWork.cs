@@ -10,7 +10,9 @@ namespace Application.Interfaces.Repositories
     {
         IProductRepository Products { get; }
         IProductImageRepository ProductImages { get; }
-        IProviderRepository Providers { get; }   // 👈 Agregar esto
+        IProviderRepository Providers { get; }
+        IBrandRepository Brands { get; }
+        IProductGroupRepository ProductGroups { get; }   // 👈 Agregar esto
         Task<int> SaveChangesAsync();
     }
 }

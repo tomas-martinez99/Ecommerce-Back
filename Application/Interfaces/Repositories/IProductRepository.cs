@@ -9,11 +9,11 @@ namespace Application.Interfaces.Repositories
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
-        Task<IEnumerable<Product>> GetAllWithProviderAsync();
         Task<Product?> GetByIdWithRelationsAsync(int id);
         Task<Product?> GetBySkuAsync(string sku);
         Task<Product?> GetBySkuWithRelationsAsync(string sku);
         Task<Product?> GetByIdWithImagesAsync(int id);
         Task<IReadOnlyList<Product>> GetAllWithImagesAsync();
+        IQueryable <Product> GetQueryable();
     }
 }

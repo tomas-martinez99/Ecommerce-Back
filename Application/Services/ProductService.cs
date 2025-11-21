@@ -1,11 +1,14 @@
-﻿using Application.CreateDtos;
+﻿using Application.Common;
+using Application.CreateDtos;
 using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,10 +39,21 @@ namespace Application.Services
             var products = await _unitOfWork.Products.GetAllWithImagesAsync();
             return _mapper.Map<IReadOnlyList<ProductDto>>(products);
         }
-        public async Task<IEnumerable<ProductDto>> GetAllProviderAsync()
+        public async Task<List<ProductAdminDto>> GetAllFiltredAdminAsync(int? brandId, int? productGroupId, int? providerId)
         {
-            var entities = await _repo.GetAllWithProviderAsync();
-            return _mapper.Map<IEnumerable<ProductDto>>(entities);
+            var query = _repo.GetQueryable();
+
+            if (brandId.HasValue)
+                query = query.Where(p => p.BrandId == brandId.Value);
+
+            if (productGroupId.HasValue)
+                query = query.Where(p => p.ProductGroupId == productGroupId.Value);
+            if (providerId.HasValue)
+                query = query.Where(p => p.ProviderId == providerId.Value);
+
+            return await query
+                .ProjectTo<ProductAdminDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
 
         //  Obtener producto por Id con imágenes
@@ -49,6 +63,13 @@ namespace Application.Services
             return product is null ? null : _mapper.Map<DetailProductDto>(product);
         }
 
+        //Obtener el producto por Id con imagen y datos del admin
+        public async Task<DetailProductAdminDto?> GetByIdAdminAsync(int id)
+        {
+            var product = await _unitOfWork.Products.GetByIdWithImagesAsync(id);
+            return product is null ? null : _mapper.Map<DetailProductAdminDto>(product);
+        }
+
         //  Crear producto
         public async Task<DetailProductDto> CreateAsync(CreateProductDto dto)
         {
@@ -56,10 +77,23 @@ namespace Application.Services
 
             // Validar proveedor
             var provider = await _unitOfWork.Providers.GetByIdAsync(dto.ProviderId);
+
+            var brand = await _unitOfWork.Brands.GetByIdAsync(dto.BrandId);
+
+            var productGroup = await _unitOfWork.ProductGroups.GetByIdAsync(dto.ProductGroupId);
+
             if (provider == null)
                 throw new Exception($"No existe un proveedor con Id {dto.ProviderId}");
 
+            if (brand == null)
+                throw new Exception($"No existe un marca con Id {dto.BrandId}");
+
+            if (productGroup == null)
+                throw new Exception($"No existe un categoria con Id {dto.ProductGroupId}");
+
             entity.Provider = provider;
+            entity.Brand = brand;
+            entity.ProductGroup = productGroup;
 
             await _unitOfWork.Products.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
@@ -145,5 +179,22 @@ namespace Application.Services
 
             return true;
         }
+
+        public async Task<PagedResult<ProductDto>> GetFilteredPagedAsync(int? brandId, int? productGroupId, int page, int pageSize)
+        {
+            var query = _repo.GetQueryable();
+            if (brandId.HasValue) query = query.Where(p => p.BrandId == brandId.Value);
+            if (productGroupId.HasValue) query = query.Where(p => p.ProductGroupId == productGroupId.Value);
+
+            var total = await query.CountAsync();
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
+
+            return new PagedResult<ProductDto> { Items = items, Total = total, Page = page, PageSize = pageSize };
+        }
+
     }
 }

@@ -20,15 +20,15 @@ namespace Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+        public async Task<ActionResult> GetAll([FromQuery] int? brandId, [FromQuery] int? productGroupId, [FromQuery] int page = 1, [FromQuery] int pageSize = 12)
         {
-            var list = await _service.GetAllAsync();
-            return Ok(list);
+            var result = await _service.GetFilteredPagedAsync(brandId, productGroupId, page, pageSize);
+            return Ok(result);
         }
         [HttpGet("admin")]
-        public async Task<ActionResult<IEnumerable<ProductDto>>> GetAllProvider()
+        public async Task<ActionResult> GetAllAdmin([FromQuery] int? brandId, [FromQuery] int? productGroupId, [FromQuery] int? providerId)
         {
-            var list = await _service.GetAllProviderAsync();
+            var list = await _service.GetAllFiltredAdminAsync(brandId,productGroupId, providerId );
             return Ok(list);
         }
 
@@ -36,6 +36,14 @@ namespace Web.Controllers
         public async Task<ActionResult<DetailProductDto>> GetById(int id)
         {
             var dto = await _service.GetByIdAsync(id);
+            if (dto is null) return NotFound();
+            return Ok(dto);
+        }
+
+        [HttpGet("{id:int}/admin")]
+        public async Task<ActionResult<DetailProductAdminDto>> GetByIdAdmin(int id)
+        {
+            var dto = await _service.GetByIdAdminAsync(id);
             if (dto is null) return NotFound();
             return Ok(dto);
         }
