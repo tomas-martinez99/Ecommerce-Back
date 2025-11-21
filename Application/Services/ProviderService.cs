@@ -1,4 +1,5 @@
 ﻿using Application.CreateDtos;
+using Application.DetailDtos;
 using Application.GetAllDtos;
 using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
@@ -60,6 +61,17 @@ namespace Application.Services
 
             await _repo.DeleteAsync(entity);
             return true;
+        }
+        public async Task<DetailProviderDto> GetByIdWithProductsAsync(int id)
+        {
+            var entity = await _repo.GetWithProductsAsync(id);
+            return entity is null ? null : _mapper.Map<DetailProviderDto>(entity);
+        }
+
+        public async Task<IEnumerable<DetailProviderDto>> GetAllWithProductsAsync()
+        {
+            var entities = await _repo.GetAllWithProductsAsync();
+            return _mapper.Map<IEnumerable<DetailProviderDto>>(entities);
         }
     }
 }
