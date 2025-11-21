@@ -15,9 +15,9 @@ namespace Application.CreateDtos
         public string Description { get; set; }
         public decimal Price { get; set; }
         public decimal Cost { get; set; }
-        public decimal stock { get; set; }
+        public decimal Stock { get; set; }
         public int ProviderId { get; set; }
-        public string Brand { get; set; }
-        public string FamilyGroup { get; set; }
+        public int BrandId { get; set; }
+        public int ProductGroupId { get; set; }
     }
 }

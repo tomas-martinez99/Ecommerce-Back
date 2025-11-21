@@ -23,8 +23,10 @@ namespace Domain.Entities
         public Provider Provider { get; set; }
         public int? ProviderId { get; set; }
         public ICollection<OrderProduct> Orders { get; set; }
-        public string Brand { get; set; }
-        public string FamilyGroup { get; set; }
+        public int BrandId { get; set; }
+        public Brand Brand { get; set; }
+        public int ProductGroupId { get; set; }
+        public ProductGroup ProductGroup { get; set; }
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
 
 

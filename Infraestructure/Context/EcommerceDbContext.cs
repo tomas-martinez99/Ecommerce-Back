@@ -20,6 +20,8 @@ namespace Infraestructure.Context
         public DbSet<User> Users { get; set; }
         public DbSet<OrderHistory> OrderHistory { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<Brand> Brands { get; set; }
+        public DbSet<ProductGroup> ProductGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +46,18 @@ namespace Infraestructure.Context
                 .HasOne(p => p.Provider)
                 .WithMany(pr => pr.Products)
                 .HasForeignKey(p => p.ProviderId);
+
+            modelBuilder.Entity<Product>()
+               .HasOne(p => p.ProductGroup)
+               .WithMany(pr => pr.Products)
+               .HasForeignKey(p => p.ProductGroupId);
+
+            //One-to-many relationship: Brand → Product
+
+            modelBuilder.Entity<Product>()
+                .HasOne(p=> p.Brand)
+                .WithMany(b => b.Products)
+                .HasForeignKey(p => p.BrandId);
 
 
             //One-to-many relationship: Role → User

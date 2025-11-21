@@ -17,25 +17,23 @@ namespace Infraestructure.Repositories
         {
             _DbContextProduct = context;
         }
-
-        public async Task<IEnumerable<Product>> GetAllWithProviderAsync()
-        {
-            return await _DbContextProduct.Products
-                .Include(p => p.Provider)
-                .Include(p => p.Images)
-                .ToListAsync();
-        }
         public override async Task<Product> GetByIdAsync(int id)
         {
             return await _DbContextProduct.Products
                 .Include(p => p.Provider)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductGroup)
+                 .Include(p => p.Images)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
+
+
 
         public async Task<Product?> GetByIdWithRelationsAsync(int id)
         {
             return await _DbContextProduct.Products
-                .Include(p => p.Provider)         // ejemplo de navegación
+                .Include(p => p.Provider)
+                .Include(p => p.Brand)// ejemplo de navegación
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -52,14 +50,19 @@ namespace Infraestructure.Repositories
             if (string.IsNullOrWhiteSpace(sku)) return null;
             return await _DbContextProduct.Products
                 .Include(p => p.Provider)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductGroup)
                 .FirstOrDefaultAsync(p => p.SKU == sku);
         }
 
         public async Task<Product?> GetByIdWithImagesAsync(int id)
         {
             return await _DbContextProduct.Products
-                .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == id);
+              .Include(p => p.Brand)
+              .Include(p => p.ProductGroup)
+              .Include(p => p.Images)
+              .Include(p => p.Provider)
+              .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<IReadOnlyList<Product>> GetAllWithImagesAsync()
@@ -67,7 +70,18 @@ namespace Infraestructure.Repositories
             return await _DbContextProduct.Products
                 .Include(p => p.Images)
                 .Include(p => p.Provider)
+                .Include(p => p.Brand)
+                .Include(p => p.ProductGroup)
                 .ToListAsync();
+        }
+
+        public IQueryable<Product> GetQueryable()
+        {
+            return _DbContextProduct.Products
+                .AsNoTracking()
+                .Include(p => p.Brand)
+                .Include(p => p.ProductGroup)
+                .Include(p => p.Images);
         }
     }
 }
