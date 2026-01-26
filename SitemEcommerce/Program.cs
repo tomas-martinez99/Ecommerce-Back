@@ -46,6 +46,7 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IProviderService, ProviderService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IProductGroupService, ProductGroupService>();
+builder.Services.AddScoped<ISearchService, SearchService>();
 
 
 

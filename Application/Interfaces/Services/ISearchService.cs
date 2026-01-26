@@ -10,6 +10,6 @@ namespace Application.Interfaces.Services
 {
     public interface ISearchService
     {
-        Task<Result<IEnumerable<SearchProductResponseByName>>> SearchProductResponseByName(string ProductName);
+        Task<Result<IEnumerable<SearchProductResponseByName>>> SearchProductResponseAsync(SearchProductRequest request);
     }
 }

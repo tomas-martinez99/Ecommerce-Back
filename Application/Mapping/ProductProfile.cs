@@ -33,6 +33,9 @@ namespace Application.Mapping
 
             CreateMap<ProductImage, ProductImageDto>();
 
+            CreateMap<Brand, BrandDto>();
+            CreateMap<ProductGroup, ProductGroupDto>();
+
             CreateMap<Product, DetailProductDto>()
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
@@ -42,6 +45,11 @@ namespace Application.Mapping
             CreateMap<Product, DetailProductAdminDto>()
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
             .ForMember(dest => dest.Provider, opt => opt.MapFrom(src => src.Provider))
+            .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
+            .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
+
+            CreateMap<Product, SearchProductResponseByName>()
+            .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
             .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
         }

@@ -5,6 +5,8 @@ using Application.Interfaces.Repositories;
 using Application.Interfaces.Services;
 using AutoMapper;
 using Domain.Entities;
+using Domain.Errors;
+using FluentResults;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,54 +26,88 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ProviderDto>> GetAllAsync()
+        public async Task<Result<IEnumerable<ProviderDto>>> GetAllAsync()
         {
             var entities = await _repo.GetAllAsync();
-            return _mapper.Map<IEnumerable<ProviderDto>>(entities);
+
+            if (entities == null) return Result.Fail<IEnumerable<ProviderDto>>("An error ocurred when trying to get all provider");
+
+            var response = _mapper.Map<IEnumerable<ProviderDto>>(entities);
+
+            return Result.Ok(response);
         }
 
-        public async Task<ProviderDto> GetByIdAsync(int id)
+        public async Task<Result<ProviderDto>> GetByIdAsync(int id)
         {
             var entity = await _repo.GetByIdAsync(id);
-            return entity is null
-                ? null
-                : _mapper.Map<ProviderDto>(entity);
+
+            if (entity == null) return Result.Fail<ProviderDto>(new NotFoundError($"Provider with id {id} not found"));
+
+            var response = _mapper.Map<ProviderDto>(entity);
+
+            return Result.Ok(response);
         }
 
-        public async Task<ProviderDto> CreateAsync(CreateProviderDto dto)
+        public async Task<Result<ProviderDto>> CreateAsync(CreateProviderDto dto)
         {
             var entity = _mapper.Map<Provider>(dto);
+
             await _repo.AddAsync(entity);
-            return _mapper.Map<ProviderDto>(entity);
+
+            await _repo.SaveChangesAsync();
+
+            var response = _mapper.Map<ProviderDto>(entity);
+
+            return Result.Ok(response);
         }
 
-        public async Task<bool> UpdateAsync(int id, CreateProviderDto dto)
+        public async Task<Result> UpdateAsync(int id, CreateProviderDto dto)
         {
             var entity = await _repo.GetByIdAsync(id);
+
+            if (entity == null) return Result.Fail(new NotFoundError($"Provider with id {id} not found"));
+
             _mapper.Map(dto, entity!);
+
             await _repo.UpdateAsync(entity!);
-            return true;
+
+            await _repo.SaveChangesAsync();
+
+            return Result.Ok();
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<Result> DeleteAsync(int id)
         {
             var entity = await _repo.GetByIdAsync(id);
-            if (entity is null)
-                return false;
+
+            if (entity == null) return Result.Fail(new NotFoundError($"Provider with id {id} not found"));
 
             await _repo.DeleteAsync(entity);
-            return true;
+
+            await _repo.SaveChangesAsync();
+
+            return Result.Ok();
         }
-        public async Task<DetailProviderDto> GetByIdWithProductsAsync(int id)
+        public async Task<Result<DetailProviderDto>> GetByIdWithProductsAsync(int id)
         {
             var entity = await _repo.GetWithProductsAsync(id);
-            return entity is null ? null : _mapper.Map<DetailProviderDto>(entity);
+
+            if (entity == null) return Result.Fail(new NotFoundError($"Provider with id {id} not found"));
+
+            var response = _mapper.Map<DetailProviderDto>(entity);
+
+            return Result.Ok(response);
         }
 
-        public async Task<IEnumerable<DetailProviderDto>> GetAllWithProductsAsync()
+        public async Task<Result<IEnumerable<DetailProviderDto>>> GetAllWithProductsAsync()
         {
             var entities = await _repo.GetAllWithProductsAsync();
-            return _mapper.Map<IEnumerable<DetailProviderDto>>(entities);
+
+            if (entities == null) return Result.Fail<IEnumerable<DetailProviderDto>>("An error ocurred when trying to get all provider");
+
+            var response = _mapper.Map<IEnumerable<DetailProviderDto>>(entities);
+
+            return Result.Ok(response);
         }
     }
 }
