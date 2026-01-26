@@ -1,4 +1,5 @@
-﻿using Application.Interfaces.Repositories;
+﻿using Application.GetAllDtos;
+using Application.Interfaces.Repositories;
 using Domain.Entities;
 using Infraestructure.Context;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,27 @@ namespace Infraestructure.Repositories
                 .Include(p => p.Brand)
                 .Include(p => p.ProductGroup)
                 .Include(p => p.Images);
+        }
+
+        public async Task<List<Product>> SearchAsync(SearchProductRequest request)
+        {
+            var query = _DbContextProduct.Products
+                .Include(p => p.Brand)
+                .Include(p => p.ProductGroup)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.ProductName))
+                query = query.Where(p => p.ProductName.Contains(request.ProductName));
+
+            if (!string.IsNullOrWhiteSpace(request.Brand))
+                query = query.Where(p => p.Brand.BrandName.Contains(request.Brand));
+
+            if (!string.IsNullOrWhiteSpace(request.ProductGroup))
+                query = query.Where(p => p.ProductGroup.Name.Contains(request.ProductGroup));
+            if (request.Price.HasValue)
+                query = query.Where(p => p.Price == request.Price.Value);
+
+            return await query.ToListAsync();
         }
     }
 }

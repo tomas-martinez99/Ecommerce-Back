@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.GetAllDtos;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace Application.Interfaces.Repositories
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        Task<List<Product>> SearchAsync(SearchProductRequest request);
         Task<Product?> GetByIdWithRelationsAsync(int id);
         Task<Product?> GetBySkuAsync(string sku);
         Task<Product?> GetBySkuWithRelationsAsync(string sku);

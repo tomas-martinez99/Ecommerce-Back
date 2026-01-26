@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace Application.GetAllDtos
 {
-    public class SearchProductResponseByName
-    {
-        public int Id { get; set; }
-        public string ProductName { get; set; }
-        public string ImgUrl { get; set; }
-        public decimal Price { get; set; }
-
-    }
+    public record SearchProductResponseByName
+    (
+        int Id,
+        string ProductName,
+        decimal Price,
+        List<ProductImageDto> Images,
+        ProductGroupDto ProductGroup,
+        BrandDto Brand,
+        int ProductGroupId,
+        int BrandId
+    );
 }

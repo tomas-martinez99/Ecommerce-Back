@@ -4,11 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.GetAllDtos
+namespace Domain.Interfaces;
+public interface ICurrentUser
 {
-    public record ProviderDto
-    (
-        int Id,
-        string ProviderName
-    );
+    string? Name { get; }
 }

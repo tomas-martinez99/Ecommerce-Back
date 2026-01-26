@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 
 namespace Application.GetAllDtos
 {
-    public record ProviderDto
+    public record SearchProductRequest
     (
-        int Id,
-        string ProviderName
+        string? ProductName,
+        decimal? Price,
+        string? Brand,
+        string? ProductGroup
     );
 }

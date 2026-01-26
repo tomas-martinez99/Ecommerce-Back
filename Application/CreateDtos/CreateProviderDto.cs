@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Application.CreateDtos
 {
-    public class CreateProviderDto
-    {
-        public string ProviderName { get; set; }
-    }
+    public record CreateProviderDto
+    (
+        string ProviderName
+    );
 }
