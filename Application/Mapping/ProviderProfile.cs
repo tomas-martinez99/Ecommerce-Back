@@ -17,12 +17,6 @@ namespace Application.Mapping
         {
             CreateMap<CreateProviderDto, Provider>();
 
-            // Mapear Product a ProductByProviderDto
-            CreateMap<Product, ProductByProviderDto>()
-                .ForMember(d => d.ProductName, opt => opt.MapFrom(s => s.ProductName))
-                .ForMember(d => d.Cost, opt => opt.MapFrom(s => s.Cost))
-                .ForMember(d => d.Brand, opt => opt.MapFrom(s => s.Brand));
-
             // Mapear Provider a ProviderDto básico
             CreateMap<Provider, ProviderDto>();
 

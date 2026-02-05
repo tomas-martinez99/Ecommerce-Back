@@ -8,11 +8,10 @@ namespace Domain.Enums
 {
     public enum OrderStatus
     {
-        EnProseso,
-        Pausada,
-        Canselada,
-        PagoEnProseso,
-        Pagada,
-        Completada
+        pendiente,
+        asignada,
+        paga,
+        completada,
+        cancelada
     }
 }

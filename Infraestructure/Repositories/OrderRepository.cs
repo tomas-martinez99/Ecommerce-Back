@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Infraestructure.Repositories
 {
@@ -43,7 +44,45 @@ namespace Infraestructure.Repositories
                 .Include(p => p.Product)
                 .ToListAsync();
         }
+        public override async Task<IReadOnlyList<Order>> GetAllAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Employed)
+                .Include(o => o.Products)
+                    .ThenInclude(op => op.Product)
+                .ToListAsync(cancellationToken);
+        }
+        public async Task<Order?> GetByIdWithDetailsAsync(int id, CancellationToken cancellationToken = default)
+        {
+            return await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.Employed)
+                .Include(o => o.Products).ThenInclude(op => op.Product)
+                .Include(o => o.History)
+                .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
+        }
+
+        public async Task AddAsync(Order order, CancellationToken cancellationToken = default)
+        {
+            await _context.Orders.AddAsync(order, cancellationToken);
+        }
+        public async Task<IEnumerable<OrderHistory>> GetHistoryByOrderIdAsync(int orderId, CancellationToken cancellationToken = default)
+        {
+            return await _context.OrderHistory
+                .Where(h => h.OrderId == orderId)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IEnumerable<OrderProduct>> GetProductsByOrderIdAsync(int orderId, CancellationToken cancellationToken = default)
+        {
+            return await _context.OrderProducts
+                .Where(p => p.OrderId == orderId)
+                .Include(p => p.Product)
+                .ToListAsync(cancellationToken);
+        }
     }
+}
 
     
-}
+

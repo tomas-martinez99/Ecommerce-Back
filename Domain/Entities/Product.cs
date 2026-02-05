@@ -28,7 +28,7 @@ namespace Domain.Entities
         public int ProductGroupId { get; set; }
         public ProductGroup ProductGroup { get; set; }
         public ICollection<ProductImage> Images { get; set; } = new List<ProductImage>();
-
+        public ICollection<ProductPromotion> ProductPromotions { get; set; } = new List<ProductPromotion>();
 
     }
 }

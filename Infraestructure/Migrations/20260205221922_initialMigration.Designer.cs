@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infraestructure.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20251121231821_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260205221922_initialMigration")]
+    partial class initialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,10 @@ namespace Infraestructure.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("Created")
+                    b.Property<int>("BuyMethod")
+                        .HasColumnType("int");
+
+                    b.Property<DateTimeOffset>("Created")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int?>("EmployedId")
@@ -59,6 +62,12 @@ namespace Infraestructure.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<decimal>("Subtotal")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("Total")
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -70,6 +79,37 @@ namespace Infraestructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("Domain.Entities.OrderAppliedPromotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTimeOffset>("AppliedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("DiscountAmount")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("OrderAppliedPromotion");
                 });
 
             modelBuilder.Entity("Domain.Entities.OrderHistory", b =>
@@ -110,6 +150,15 @@ namespace Infraestructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<decimal>("FinalUnitiPrice")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("FreeQuantity")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int?>("PromotionId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Quantity")
                         .HasColumnType("decimal(65,30)");
 
@@ -119,6 +168,8 @@ namespace Infraestructure.Migrations
                     b.HasKey("OrderId", "ProductId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("PromotionId");
 
                     b.ToTable("OrderProducts");
                 });
@@ -226,6 +277,64 @@ namespace Infraestructure.Migrations
                     b.ToTable("ProductImages");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProductPromotion", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "PromotionId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("ProductPromotions");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Promotion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ActionJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ConditionJson")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Extra")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PromotionName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("Stackable")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Promotions");
+                });
+
             modelBuilder.Entity("Domain.Entities.Provider", b =>
                 {
                     b.Property<int>("Id")
@@ -308,6 +417,15 @@ namespace Infraestructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Domain.Entities.OrderAppliedPromotion", b =>
+                {
+                    b.HasOne("Domain.Entities.Order", null)
+                        .WithMany("AppliedPromotions")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Domain.Entities.OrderHistory", b =>
                 {
                     b.HasOne("Domain.Entities.Order", "Order")
@@ -333,9 +451,15 @@ namespace Infraestructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Promotion", "Promotion")
+                        .WithMany()
+                        .HasForeignKey("PromotionId");
+
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+
+                    b.Navigation("Promotion");
                 });
 
             modelBuilder.Entity("Domain.Entities.Product", b =>
@@ -374,6 +498,25 @@ namespace Infraestructure.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("Domain.Entities.ProductPromotion", b =>
+                {
+                    b.HasOne("Domain.Entities.Product", "Product")
+                        .WithMany("ProductPromotions")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Promotion", "Promotion")
+                        .WithMany("ProductPromotions")
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("Promotion");
+                });
+
             modelBuilder.Entity("Domain.Entities.User", b =>
                 {
                     b.HasOne("Domain.Entities.Role", "Role")
@@ -390,6 +533,8 @@ namespace Infraestructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Order", b =>
                 {
+                    b.Navigation("AppliedPromotions");
+
                     b.Navigation("History");
 
                     b.Navigation("Products");
@@ -400,11 +545,18 @@ namespace Infraestructure.Migrations
                     b.Navigation("Images");
 
                     b.Navigation("Orders");
+
+                    b.Navigation("ProductPromotions");
                 });
 
             modelBuilder.Entity("Domain.Entities.ProductGroup", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Promotion", b =>
+                {
+                    b.Navigation("ProductPromotions");
                 });
 
             modelBuilder.Entity("Domain.Entities.Provider", b =>

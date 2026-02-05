@@ -96,5 +96,13 @@ namespace Web.Controllers
             if (!success) return NotFound();
             return NoContent();
         }
+        [HttpGet("promotions")]
+        public async Task<ActionResult> GetPromotedProducts()
+        {
+            var result = await _service.GetPromotedProductsAsync();
+            return Ok(result);
+
+        }
     }
 }
+

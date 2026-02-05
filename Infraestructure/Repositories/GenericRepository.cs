@@ -11,45 +11,46 @@ namespace Infraestructure.Repositories
 {
     public class GenericRepository<T>  : IGenericRepository<T> where T : class
     {
-        private readonly EcommerceDbContext _dbContext;
+        protected readonly EcommerceDbContext _dbContext;
 
         public GenericRepository(EcommerceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
 
-        public virtual async Task<T> GetByIdAsync(int id)
+        public virtual async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<T>().FindAsync(id);
+            // FindAsync tiene sobrecarga con object[] + CancellationToken
+            var entity = await _dbContext.Set<T>().FindAsync(new object[] { id }, cancellationToken);
+            return entity as T;
         }
 
-        public virtual Task AddAsync(T entity)
+        public virtual async Task AddAsync(T entity, CancellationToken cancellationToken = default)
         {
-            _dbContext.Set<T>().Add(entity);
-            return Task.CompletedTask;
+            await _dbContext.Set<T>().AddAsync(entity, cancellationToken);
         }
 
-        public virtual Task UpdateAsync(T entity)
+        public virtual Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbContext.Entry(entity).State = EntityState.Modified;
             return Task.CompletedTask;
         }
 
-        public virtual Task DeleteAsync(T entity)
+        public virtual Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
         {
             _dbContext.Set<T>().Remove(entity);
             return Task.CompletedTask;
         }
 
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public virtual async Task<IReadOnlyList<T>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _dbContext
                 .Set<T>()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
-        public virtual async Task SaveChangesAsync()
+        public virtual Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _dbContext.SaveChangesAsync();
+            return _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

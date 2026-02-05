@@ -14,6 +14,10 @@ namespace Domain.Entities
         public Product Product { get; set; }
         public decimal UnitPrice { get; set; }
         public decimal Quantity { get; set; }
+        public decimal FinalUnitiPrice { get; set; }
+        public decimal FreeQuantity { get; set; }
+        public int? PromotionId { get; set; }
+        public Promotion? Promotion { get; set; }
 
     }
 }

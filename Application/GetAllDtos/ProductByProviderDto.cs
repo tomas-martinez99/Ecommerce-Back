@@ -11,6 +11,8 @@ namespace Application.GetAllDtos
         public int Id { get; set; }
         public string ProductName { get; set; }
         public decimal Cost { get; set; }
-        public string Brand { get; set; }
+        public BrandDto Brand { get; set; }
+        public ProductGroupDto ProductGroup { get; set; }
+        public ProviderDto Provider { get; set; }
     }
 }

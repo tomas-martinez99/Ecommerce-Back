@@ -7,6 +7,9 @@ using Infraestructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Web.Service;
+using Application.PromotionsServicesRules;
+using Application.PromotionsServicesRules.Interfaces;
+using Infraestructure.Repositories.Infraestructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +37,7 @@ builder.Services.AddScoped<IProductImageRepository, ProductImageRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBrandRepository, BrandRepository>();
 builder.Services.AddScoped<IProductGroupRepository, ProductGroupRepository>();
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 
 //Service
 
@@ -47,7 +51,10 @@ builder.Services.AddScoped<IProviderService, ProviderService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IProductGroupService, ProductGroupService>();
 builder.Services.AddScoped<ISearchService, SearchService>();
-
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IPromotionRuleFactory, PromotionRuleFactory>();
+builder.Services.AddScoped<PromotionEngine>();
 
 
 //AutoMapper
@@ -59,6 +66,7 @@ builder.Services.AddAutoMapper(typeof(ProductProfile));
 builder.Services.AddAutoMapper(typeof(ProviderProfile));
 builder.Services.AddAutoMapper(typeof(BrandProfile));
 builder.Services.AddAutoMapper(typeof(ProductGroupProfile));
+builder.Services.AddAutoMapper(typeof(PromotionProfile));
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 builder.Services.AddCors(options =>

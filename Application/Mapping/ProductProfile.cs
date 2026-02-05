@@ -52,6 +52,11 @@ namespace Application.Mapping
             .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
             .ForMember(dest => dest.Brand, opt => opt.MapFrom(src => src.Brand))
             .ForMember(dest => dest.ProductGroup, opt => opt.MapFrom(src => src.ProductGroup));
+
+            CreateMap<Product, ProductByProviderDto>()
+            .ForMember(d => d.Brand, opt => opt.MapFrom(s => s.Brand))
+            .ForMember(d => d.ProductGroup, opt => opt.MapFrom(s => s.ProductGroup))
+            .ForMember(d => d.Provider, opt => opt.MapFrom(s => s.Provider));
         }
     }
 }
