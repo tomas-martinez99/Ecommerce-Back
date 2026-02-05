@@ -14,8 +14,8 @@ namespace Application.Interfaces.Services
     {
         Task<IEnumerable<OrderDto>> GetAllAsync();
         Task<DetailOrderDto?> GetByIdAsync(int id);
-        Task<OrderDto> CreateAsync(CreateOrderDto dto);
-        Task<bool> ChangeStatusAsync(int orderId, OrderStatus newStatus, int? employeeId = null);
+        Task<OrderDto> CreateAsync(CreateOrderDto dto, CancellationToken cancellationToken = default);
+        Task<bool> ChangeStatusAsync(int orderId, OrderStatus newStatus, int? employeeId = null, CancellationToken cancellationToken = default);
         Task<bool> DeleteAsync(int id);
     }
 }

@@ -18,14 +18,14 @@ namespace Infraestructure.Repositories
         {
             _DbContextProduct = context;
         }
-        public override async Task<Product> GetByIdAsync(int id)
+        public override async Task<Product> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _DbContextProduct.Products
                 .Include(p => p.Provider)
                 .Include(p => p.Brand)
                 .Include(p => p.ProductGroup)
                  .Include(p => p.Images)
-                .FirstOrDefaultAsync(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
         }
 
 
@@ -82,7 +82,14 @@ namespace Infraestructure.Repositories
                 .AsNoTracking()
                 .Include(p => p.Brand)
                 .Include(p => p.ProductGroup)
-                .Include(p => p.Images);
+                .Include(p => p.Images)
+                .Include(p => p.Provider);
+        }
+        public async Task<IEnumerable<Product>> GetByIdsAsync(IEnumerable<int> ids)
+        {
+            return await _DbContextProduct.Products
+                .Where(p => ids.Contains(p.Id))
+                .ToListAsync();
         }
 
         public async Task<List<Product>> SearchAsync(SearchProductRequest request)

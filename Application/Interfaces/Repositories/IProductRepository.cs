@@ -17,5 +17,6 @@ namespace Application.Interfaces.Repositories
         Task<Product?> GetByIdWithImagesAsync(int id);
         Task<IReadOnlyList<Product>> GetAllWithImagesAsync();
         IQueryable <Product> GetQueryable();
+        Task<IEnumerable<Product>> GetByIdsAsync(IEnumerable<int> ids);
     }
 }

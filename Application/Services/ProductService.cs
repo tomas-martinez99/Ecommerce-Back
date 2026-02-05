@@ -195,6 +195,16 @@ namespace Application.Services
 
             return new PagedResult<ProductDto> { Items = items, Total = total, Page = page, PageSize = pageSize };
         }
+        public async Task<IReadOnlyList<ProductByProviderDto>> GetPromotedProductsAsync()
+        {
+            var products = await _unitOfWork.Products
+                .GetQueryable()
+                .Where(p => p.ProductPromotions.Any(pp => pp.Promotion.IsEnabled))
+                .Include(p => p.Images)
+                .ToListAsync();
+
+            return _mapper.Map<IReadOnlyList<ProductByProviderDto>>(products);
+        }
 
     }
 }

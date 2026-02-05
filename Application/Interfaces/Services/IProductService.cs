@@ -27,5 +27,6 @@ namespace Application.Interfaces.Services
         Task<bool> SetMainImageAsync(int productId, int imageId);
 
         Task<PagedResult<ProductDto>> GetFilteredPagedAsync(int? brandId, int? productGroupId, int page, int pageSize);
+        Task<IReadOnlyList<ProductByProviderDto>> GetPromotedProductsAsync();
     }
 }

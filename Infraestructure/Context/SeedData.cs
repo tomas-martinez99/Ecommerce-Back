@@ -167,7 +167,7 @@ namespace Infraestructure.Context
                     // Agregar historial de estado
                     order.History.Add(new OrderHistory
                     {
-                        OldStatus = OrderStatus.EnProseso,
+                        OldStatus = OrderStatus.pendiente,
                         NewStatus = status,
                         ChangedByEmployeeId = employeeId,
                         ChangedAt = createdDate.AddHours(1)

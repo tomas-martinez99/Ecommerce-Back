@@ -22,6 +22,8 @@ namespace Infraestructure.Context
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<ProductGroup> ProductGroups { get; set; }
+        public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<ProductPromotion> ProductPromotions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,6 +93,19 @@ namespace Infraestructure.Context
                        .HasForeignKey(h => h.OrderId)
                        .OnDelete(DeleteBehavior.Cascade);
             });
+
+            modelBuilder.Entity<ProductPromotion>()
+        .HasKey(pp => new { pp.ProductId, pp.PromotionId });
+
+            modelBuilder.Entity<ProductPromotion>()
+                .HasOne(pp => pp.Product)
+                .WithMany(p => p.ProductPromotions)
+                .HasForeignKey(pp => pp.ProductId);
+
+            modelBuilder.Entity<ProductPromotion>()
+                .HasOne(pp => pp.Promotion)
+                .WithMany(p => p.ProductPromotions)
+                .HasForeignKey(pp => pp.PromotionId);
 
             base.OnModelCreating(modelBuilder);
         }
